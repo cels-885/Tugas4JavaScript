@@ -1,10 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tugas Pertemuan 4 - Sistem Manajemen Transportasi</title>
+  <title>Sistem Manajemen Transportasi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    label {
+      display: inline-block;
+      width: 120px;
+      margin-top: 8px;
+    }
+    input, select {
+      padding: 5px;
+      margin-top: 8px;
+    }
+    button {
+      margin-top: 12px;
+      padding: 6px 12px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
   <h2>Sistem Manajemen Transportasi</h2>
+
+  <!-- Form input pelanggan -->
+  <form id="formPelanggan">
+    <label>Nama:</label>
+    <input type="text" id="nama" required><br>
+
+    <label>Nomor Telepon:</label>
+    <input type="text" id="nomorTelepon" required><br>
+
+    <label>Pilih Kendaraan:</label>
+    <select id="kendaraan">
+      <option value="Mobil">Mobil - Avanza</option>
+      <option value="Motor">Motor - Vario</option>
+      <option value="Bus">Bus - Pariwisata</option>
+    </select><br>
+
+    <button type="submit">Tambah Pelanggan</button>
+  </form>
+
+  <!-- Tabel daftar pelanggan -->
+  <h3>Daftar Pelanggan yang Menyewa Kendaraan:</h3>
+  <table id="tabelPelanggan">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Nomor Telepon</th>
+        <th>Kendaraan Disewa</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
     // Class induk Kendaraan
@@ -13,25 +75,22 @@
         this.nama = nama;
         this.jenis = jenis;
       }
-
       getInfo() {
         return `${this.jenis} - ${this.nama}`;
       }
     }
 
-    // Turunan Kendaraan
+    // Turunan
     class Mobil extends Kendaraan {
       constructor(nama) {
         super(nama, "Mobil");
       }
     }
-
     class Motor extends Kendaraan {
       constructor(nama) {
         super(nama, "Motor");
       }
     }
-
     class Bus extends Kendaraan {
       constructor(nama) {
         super(nama, "Bus");
@@ -49,38 +108,51 @@
       sewaKendaraan(kendaraan) {
         this.kendaraanDisewa = kendaraan;
       }
-
-      getInfo() {
-        return `Nama: ${this.nama}, Nomor: ${this.nomorTelepon}, Kendaraan: ${this.kendaraanDisewa ? this.kendaraanDisewa.getInfo() : "Belum sewa"}`;
-      }
     }
 
-    // Array untuk menyimpan daftar pelanggan
+    // Array daftar pelanggan
     let daftarPelanggan = [];
 
-    // Fungsi tambah pelanggan baru
+    // Fungsi tambah pelanggan
     function tambahPelanggan(nama, nomorTelepon, kendaraan) {
       let pelanggan = new Pelanggan(nama, nomorTelepon);
       pelanggan.sewaKendaraan(kendaraan);
       daftarPelanggan.push(pelanggan);
+      tampilkanPelanggan();
     }
 
-    // Fungsi menampilkan semua pelanggan
+    // Fungsi tampilkan tabel pelanggan
     function tampilkanPelanggan() {
-      document.write("<h3>Daftar Pelanggan yang Menyewa Kendaraan:</h3>");
-      document.write("<ul>");
+      const tbody = document.querySelector("#tabelPelanggan tbody");
+      tbody.innerHTML = "";
       daftarPelanggan.forEach((p) => {
-        document.write(`<li>${p.getInfo()}</li>`);
+        let row = `<tr>
+          <td>${p.nama}</td>
+          <td>${p.nomorTelepon}</td>
+          <td>${p.kendaraanDisewa.getInfo()}</td>
+        </tr>`;
+        tbody.innerHTML += row;
       });
-      document.write("</ul>");
     }
 
-    // --- Contoh penggunaan ---
-    tambahPelanggan("Andi", "08123456789", new Mobil("Avanza"));
-    tambahPelanggan("Budi", "08987654321", new Motor("Vario"));
-    tambahPelanggan("Citra", "08211222333", new Bus("Pariwisata"));
+    // Event form submit
+    document.getElementById("formPelanggan").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-    tampilkanPelanggan();
+      let nama = document.getElementById("nama").value;
+      let nomor = document.getElementById("nomorTelepon").value;
+      let pilihan = document.getElementById("kendaraan").value;
+
+      let kendaraan;
+      if (pilihan === "Mobil") kendaraan = new Mobil("Avanza");
+      else if (pilihan === "Motor") kendaraan = new Motor("Vario");
+      else if (pilihan === "Bus") kendaraan = new Bus("Pariwisata");
+
+      tambahPelanggan(nama, nomor, kendaraan);
+
+      // Reset form
+      document.getElementById("formPelanggan").reset();
+    });
   </script>
 </body>
 </html>

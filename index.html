@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tugas Pertemuan 4 - Sistem Manajemen Transportasi</title>
+</head>
+<body>
+  <h2>Sistem Manajemen Transportasi</h2>
+
+  <script>
+    // Class induk Kendaraan
+    class Kendaraan {
+      constructor(nama, jenis) {
+        this.nama = nama;
+        this.jenis = jenis;
+      }
+
+      getInfo() {
+        return `${this.jenis} - ${this.nama}`;
+      }
+    }
+
+    // Turunan Kendaraan
+    class Mobil extends Kendaraan {
+      constructor(nama) {
+        super(nama, "Mobil");
+      }
+    }
+
+    class Motor extends Kendaraan {
+      constructor(nama) {
+        super(nama, "Motor");
+      }
+    }
+
+    class Bus extends Kendaraan {
+      constructor(nama) {
+        super(nama, "Bus");
+      }
+    }
+
+    // Class Pelanggan
+    class Pelanggan {
+      constructor(nama, nomorTelepon) {
+        this.nama = nama;
+        this.nomorTelepon = nomorTelepon;
+        this.kendaraanDisewa = null;
+      }
+
+      sewaKendaraan(kendaraan) {
+        this.kendaraanDisewa = kendaraan;
+      }
+
+      getInfo() {
+        return `Nama: ${this.nama}, Nomor: ${this.nomorTelepon}, Kendaraan: ${this.kendaraanDisewa ? this.kendaraanDisewa.getInfo() : "Belum sewa"}`;
+      }
+    }
+
+    // Array untuk menyimpan daftar pelanggan
+    let daftarPelanggan = [];
+
+    // Fungsi tambah pelanggan baru
+    function tambahPelanggan(nama, nomorTelepon, kendaraan) {
+      let pelanggan = new Pelanggan(nama, nomorTelepon);
+      pelanggan.sewaKendaraan(kendaraan);
+      daftarPelanggan.push(pelanggan);
+    }
+
+    // Fungsi menampilkan semua pelanggan
+    function tampilkanPelanggan() {
+      document.write("<h3>Daftar Pelanggan yang Menyewa Kendaraan:</h3>");
+      document.write("<ul>");
+      daftarPelanggan.forEach((p) => {
+        document.write(`<li>${p.getInfo()}</li>`);
+      });
+      document.write("</ul>");
+    }
+
+    // --- Contoh penggunaan ---
+    tambahPelanggan("Andi", "08123456789", new Mobil("Avanza"));
+    tambahPelanggan("Budi", "08987654321", new Motor("Vario"));
+    tambahPelanggan("Citra", "08211222333", new Bus("Pariwisata"));
+
+    tampilkanPelanggan();
+  </script>
+</body>
+</html>
